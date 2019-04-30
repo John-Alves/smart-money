@@ -5,19 +5,36 @@
 </ion-header>
 
 <ion-content padding>
-  <p>
-    <input type="text" name="value" [(ngModel)]="entry.value">
-  </p>
+  <form [formGroup]='entryForm'>
+    <ion-list>
+      <ion-item>
+        <label>Valor</label>
+        <input type="tel" 
+          name='amount' 
+          formControlName='amount' 
+          [(ngModel)]="entry.amount"
+          currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"/>
+      </ion-item>
+      <ion-item class="error" no-lines *ngIf="entryForm.controls.amount.hasError('required') && entryForm.controls.amount.touched">
+        <span>O campo valor é obrigatório!</span>
+      </ion-item>
 
-  <p>
-    <select name="category" [(ngModel)]="entry.category">
-      <option value="1">Alimentação</option>
-      <option value="2">Lazer</option>
-    </select>
-  </p>
+      <ion-item>
+        <label>Categoria</label>
+        <select name='category_id' formControlName='category_id' [(ngModel)]="entry.category_id">
+          <option value="" selected>Selecione uma opção</option>
+          <option value="1">Alimentação</option>
+          <option value="2">Lazer</option>
+        </select>
+      </ion-item>
+      <ion-item class="error" no-lines *ngIf="entryForm.controls.category_id.hasError('required') && entryForm.controls.category_id.touched">
+        <span>O campo categoria deve ser selecionado!</span>
+      </ion-item>
 
-  <p>
-    <button type="submit" (click)="submitForm()">Adicionar</button>
-    <button (click)="goBack()">Cancelar</button>
-  </p>
+      <ion-item>
+        <button ion-button [disabled]="!entryForm.valid" (click)="submitForm()">Adicionar</button>
+      </ion-item>
+
+    </ion-list>
+  </form>
 </ion-content>

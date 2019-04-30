@@ -18,8 +18,9 @@
   </ul>
 
   <h3>Últimos Lançamentos</h3>
-  <ul>
-    <li>Padaria Asa: $10</li>
-    <li>Supermecado CompreMax: $190</li>
-  </ul>
+  <ol>
+    <li *ngFor="let entry of entries">
+        {{entry.description}}: {{entry.amount | currency:'R$ '}}
+    </li>
+  </ol>
 </ion-content>
