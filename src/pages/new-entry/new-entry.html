@@ -21,10 +21,12 @@
 
       <ion-item>
         <label>Categoria</label>
-        <select name='category_id' formControlName='category_id' [(ngModel)]="entry.category_id">
+        <select name='category_id' formControlName='category_id' [(ngModel)]="entry.category_id" required>
           <option value="" selected>Selecione uma opção</option>
-          <option value="1">Alimentação</option>
-          <option value="2">Lazer</option>
+          
+          <option *ngFor="let category of categories" [value]="category.id">
+            {{category.name}}
+          </option>
         </select>
       </ion-item>
       <ion-item class="error" no-lines *ngIf="entryForm.controls.category_id.hasError('required') && entryForm.controls.category_id.touched">
