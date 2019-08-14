@@ -3,7 +3,7 @@ import { NavController } from 'ionic-angular';
 
 import { NewEntryPage } from '../new-entry/new-entry';
 
-import { DatabaseProvider } from '../../providers/database/database';
+import { AccountProvider } from '../../providers/account/account';
 
 @Component({
   selector: 'page-home',
@@ -11,34 +11,38 @@ import { DatabaseProvider } from '../../providers/database/database';
 })
 export class HomePage {
   entries = [];
+  currentBalance = 0;
 
-  constructor(public navCtrl: NavController, private database: DatabaseProvider) {}
-
-  addEntry(){
-    console.log("Adicionar Lançamento");
-    this.navCtrl.push(NewEntryPage);
-  }
-
+  constructor(
+    public navCtrl: NavController,
+    public account: AccountProvider) { }
+    
   ionViewDidEnter(){
     this.loadData();
   }
 
-  loadData(){
-    console.log('Tabela criada com sucesso');
-    const sql = "SELECT * FROM entries";
-    const data = [];
-    
-    return this.database.db.executeSql(sql, data)
-    .then((values: any) => {
-      let data;
-      this.entries = [];
-      
-      for(let i = 0; i < values.rows.length; i++){
-        data = values.rows.item(i);
-        console.log(JSON.stringify(data));
-        this.entries.push(data);
-      }
-    })
-    .catch((e) => console.error("Erro ao buscar valores", JSON.stringify(e)));
+  addEntry() {
+    this.navCtrl.push(NewEntryPage);
+  }
+
+  private loadData() {
+    this.loadBalance();
+    this.loadEntries();
+  }
+
+  // Carrega o saldo atual (antes feito no contructor da classe)
+  private loadBalance() {
+    this.account
+      .loadBalance()
+        .then((balance) => this.currentBalance = balance);
+  }
+
+  // Carrega os lançamentos
+  private loadEntries() {
+    this.account
+      .allEntries()
+        .then((data: any) => {
+          this.entries = data;
+        });
   }
 }
